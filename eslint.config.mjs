@@ -22,4 +22,9 @@ export default [
     },
   },
   eslintPluginPrettierRecommended,
+  {
+    rules: {
+      '@typescript-eslint/no-namespace': 'off',
+    },
+  },
 ];

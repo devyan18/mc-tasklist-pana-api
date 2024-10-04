@@ -7,19 +7,19 @@ type Link = {
   title: string;
 };
 
-type ITask = Document & {
+type Task = Document & {
   title: string;
   description: string;
   done: boolean;
   tags: string[];
   creator: Types.ObjectId;
   priority: Priority;
+  items: Types.ObjectId[];
   links: Link[];
+  assignedTo: Types.ObjectId;
 };
 
-const priorityValues = Object.values(['low', 'medium', 'high']) as Priority[];
-
-const taskSchema = new Schema<ITask>(
+const taskSchema = new Schema<Task>(
   {
     title: {
       type: String,
@@ -44,9 +44,15 @@ const taskSchema = new Schema<ITask>(
     },
     priority: {
       type: String,
-      enum: priorityValues,
+      enum: ['low', 'medium', 'high'],
       default: 'low',
     },
+    items: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Item',
+      },
+    ],
     links: [
       {
         url: {
@@ -59,10 +65,14 @@ const taskSchema = new Schema<ITask>(
         },
       },
     ],
+    assignedTo: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,
   },
 );
 
-export const Task = model<ITask>('Task', taskSchema);
+export const Task = model<Task>('Task', taskSchema);

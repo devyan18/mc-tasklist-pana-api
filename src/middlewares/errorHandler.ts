@@ -1,12 +1,14 @@
 // src/middlewares/errorHandler.ts
-import { Request, Response } from 'express';
+
+import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 
+// Middleware de manejo de errores
 export const errorHandler = (
-  err: unknown,
+  err: any,
   _req: Request,
   res: Response,
-  // next: NextFunction,
+  next: NextFunction,
 ) => {
   if (err instanceof ZodError) {
     const formattedErrors = err.errors.map(error => ({
@@ -24,7 +26,15 @@ export const errorHandler = (
   // Manejo de otros tipos de errores
   console.error(err);
 
-  res.status(500).json({
-    message: 'Internal Server Error',
-  });
+  // Verifica si res.status es una función antes de llamarla
+  if (typeof res.status === 'function') {
+    res.status(500).json({
+      message: 'Internal Server Error',
+    });
+  } else {
+    // Si res.status no es una función, envía una respuesta genérica
+    res.send('Internal Server Error');
+  }
+
+  next();
 };

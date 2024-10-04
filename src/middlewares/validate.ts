@@ -11,6 +11,8 @@ interface ValidationSchemas {
 export const validate =
   (schemas: ValidationSchemas): RequestHandler =>
   (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
+
     try {
       if (schemas.body) {
         req.body = schemas.body.parse(req.body);

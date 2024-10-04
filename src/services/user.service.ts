@@ -5,6 +5,7 @@ type UserCreateData = {
   username: string;
   email: string;
   password: string;
+  avatar?: string;
 };
 
 export class UserService {
@@ -31,7 +32,7 @@ export class UserService {
     return userFound;
   }
 
-  static async findUserById(id: string) {
-    return User.findById(id);
+  static async findUserById(userId: string) {
+    return User.findById(userId);
   }
 }

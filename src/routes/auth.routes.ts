@@ -3,21 +3,29 @@ import { AuthService } from '../services/auth.service';
 import { validate } from '../middlewares/validate';
 import { loginSchema, registerSchema } from '../validations/auth.validations';
 import { authGuard } from '../guards/auth.guard';
+import { uploadImage } from '../middlewares/uploadImage';
+import { config } from '../settings/config';
 
 const authRouter = Router();
 
 authRouter.post(
   '/sign-up',
+  uploadImage('avatar'),
   validate({
     body: registerSchema,
   }),
   async (req, res) => {
     try {
-      const { username, email, password } = req.body;
-      const response = await AuthService.signUp({ username, email, password });
+      const { username, email, password, avatar } = req.body;
+      const response = await AuthService.signUp({
+        username,
+        email,
+        password,
+        avatar,
+      });
 
       res
-        .cookie('access_token', response.accessToken, {
+        .cookie(config.accessCookieName, response.accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
         })
@@ -42,7 +50,7 @@ authRouter.post(
       const response = await AuthService.signIn({ email, password });
 
       res
-        .cookie('access_token', response.accessToken, {
+        .cookie(config.accessCookieName, response.accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
         })
@@ -56,7 +64,7 @@ authRouter.post(
   },
 );
 
-authRouter.post('/sign-out', async (req, res) => {
+authRouter.post('/sign-out', async (_req, res) => {
   res.clearCookie('access_token').json({ message: 'Signed out' });
 });
 

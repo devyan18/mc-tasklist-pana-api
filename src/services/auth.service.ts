@@ -14,15 +14,18 @@ export class AuthService {
     username,
     email,
     password,
+    avatar,
   }: {
     username: string;
     email: string;
     password: string;
+    avatar: string | undefined;
   }): Promise<AuthResponse> {
     const newUser = await this.UserService.create({
       username,
       email,
       password,
+      avatar,
     });
 
     if (!newUser) {
@@ -66,7 +69,7 @@ export class AuthService {
     };
   }
 
-  static async findUserById(id: string): Promise<UserDocument | null> {
-    return this.UserService.findUserById(id);
+  static async findUserById(userId: string): Promise<UserDocument | null> {
+    return this.UserService.findUserById(userId);
   }
 }

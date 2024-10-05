@@ -9,7 +9,8 @@ export const authGuard = async (
   next: NextFunction,
 ) => {
   try {
-    const accessToken = req.cookies.access_token || req.headers.authorization;
+    const accessToken =
+      req.cookies[config.accessCookieName] || req.headers.authorization;
 
     console.log(accessToken);
 

@@ -24,6 +24,8 @@ authRouter.post(
         avatar,
       });
 
+      console.log(config.nodeEnv);
+
       res
         .cookie(config.accessCookieName, response.accessToken, {
           maxAge: 3600000 * 24 * 7,
@@ -50,7 +52,7 @@ authRouter.post(
     try {
       const { email, password } = req.body;
       const response = await AuthService.signIn({ email, password });
-
+      console.log(config.nodeEnv);
       res
         .cookie(config.accessCookieName, response.accessToken, {
           maxAge: 3600000 * 24 * 7,

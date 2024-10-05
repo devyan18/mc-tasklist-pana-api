@@ -29,6 +29,7 @@ authRouter.post(
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: 'none',
+          domain: 'mc-tasklist.up.railway.app',
           secure: process.env.NODE_ENV === 'production',
         })
         .json(response);

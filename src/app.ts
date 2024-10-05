@@ -38,11 +38,7 @@ export const bootstrap = async () => {
   );
   app.use(
     cors({
-      origin: [
-        'http://localhost:5000',
-        'https://8cz7fhdl-5000.brs.devtunnels.ms',
-        'https://mc-pana.netlify.app',
-      ],
+      origin: ['http://localhost:5000', 'https://mc-pana.netlify.app'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
       credentials: true,
     }),

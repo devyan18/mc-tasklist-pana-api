@@ -24,14 +24,14 @@ export const bootstrap = async () => {
       limit: '50mb',
     }),
   );
-  // app.use(express.urlencoded({ extended: true }));
+
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'cross-origin' },
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          imgSrc: ["'self'", 'http://localhost:4000'],
+          imgSrc: ["'self'", 'https://mc-tasklist.up.railway.app'],
         },
       },
     }),

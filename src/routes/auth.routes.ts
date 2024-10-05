@@ -52,7 +52,7 @@ authRouter.post(
       res
         .cookie(config.accessCookieName, response.accessToken, {
           httpOnly: true,
-          secure: true,
+          secure: process.env.NODE_ENV === 'production',
         })
         .json(response);
     } catch (error) {

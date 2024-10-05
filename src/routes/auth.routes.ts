@@ -28,9 +28,8 @@ authRouter.post(
         .cookie(config.accessCookieName, response.accessToken, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
-          sameSite: 'none',
-          domain: 'mc-tasklist.up.railway.app',
-          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          secure: config.nodeEnv === 'production',
         })
         .json(response);
     } catch (error) {
@@ -56,8 +55,8 @@ authRouter.post(
         .cookie(config.accessCookieName, response.accessToken, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
-          sameSite: 'none',
-          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          secure: config.nodeEnv === 'production',
         })
         .json(response);
     } catch (error) {

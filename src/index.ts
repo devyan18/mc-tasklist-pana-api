@@ -8,6 +8,8 @@ async function main() {
   const app = await bootstrap();
 
   app.listen(config.port, '0.0.0.0', () => {
+    console.log('NODE ENV:', config.nodeEnv);
+
     console.log(`Server is running on port ${config.port}`);
   });
 }

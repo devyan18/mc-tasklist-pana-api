@@ -4,5 +4,6 @@ export const config = {
   secret: process.env.SECRET_KEY || 'secret',
   hostname: process.env.HOSTNAME || 'http://localhost:4000',
   protocol: process.env.PROTOCOL || 'http',
+  nodeEnv: process.env.NODE_ENV || 'development',
   accessCookieName: process.env.ACCESS_COOKIE_NAME ?? 'access_token',
 };

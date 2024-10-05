@@ -12,6 +12,7 @@ export class UserService {
   static UserModel = User;
 
   static async create(data: UserCreateData) {
+    console.log(data.avatar);
     const user = new User(data);
     return user.save();
   }

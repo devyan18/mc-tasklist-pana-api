@@ -13,21 +13,35 @@ import { authGuard } from './guards/auth.guard';
 import path from 'path';
 import { itemRouter } from './routes/item.routes';
 import { quickTaskRouter } from './routes/quick-task.routes';
+import { cleanRouter } from './routes/clean.routes';
 
 export const bootstrap = async () => {
   const app: Application = express();
 
   // middlewares
-  app.use(express.json());
+  app.use(
+    express.json({
+      limit: '50mb',
+    }),
+  );
   // app.use(express.urlencoded({ extended: true }));
   app.use(
     helmet({
-      crossOriginResourcePolicy: false,
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          imgSrc: ["'self'", 'http://localhost:4000'],
+        },
+      },
     }),
   );
   app.use(
     cors({
-      origin: 'http://localhost:5000',
+      origin: [
+        'http://localhost:5000',
+        'https://8cz7fhdl-5000.brs.devtunnels.ms',
+      ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
       credentials: true,
     }),
@@ -42,6 +56,7 @@ export const bootstrap = async () => {
   app.use('/tasks', authGuard, taskRouter);
   app.use('/item', itemRouter);
   app.use('/quick-tasks', quickTaskRouter);
+  app.use('/clean', cleanRouter);
 
   app.use(errorHandler);
 

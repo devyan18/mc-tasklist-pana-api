@@ -10,15 +10,21 @@ export class QuickTaskService {
   static QuickTaskModel = QuickTask;
 
   static async createQuickTask(data: QuickTaskCreatorData) {
-    return this.QuickTaskModel.create(data);
+    const newQuickTask = await this.QuickTaskModel.create(data);
+    return QuickTaskService.getQuickTaskById(newQuickTask.id);
   }
 
   static async getQuickTasks() {
-    return this.QuickTaskModel.find().populate('items').sort({ updatedAt: -1 });
+    return this.QuickTaskModel.find()
+      .populate('items')
+      .populate('creator')
+      .sort({ updatedAt: -1 });
   }
 
   static async getQuickTaskById(id: string) {
-    return this.QuickTaskModel.findById(id).populate('items');
+    return this.QuickTaskModel.findById(id)
+      .populate('items')
+      .populate('creator');
   }
 
   static async updateQuickTask(

@@ -33,7 +33,7 @@ itemSchema.pre('save', function (next) {
   }
 
   const protocol = config.protocol || 'http';
-  const host = config.host || 'localhost';
+  const host = config.hostname || 'localhost';
   const port = config.port ? `:${config.port}` : '';
 
   const imagePath = `${protocol}://${host}${port}${this.image}`;

@@ -2,6 +2,7 @@ import { Task } from '../models/task.model';
 
 type TaskCreatorData = {
   title: string;
+  done?: boolean;
   description: string;
   creator: string;
   tags?: string[];
@@ -33,5 +34,12 @@ export class TaskService {
     return this.TaskModel.findByIdAndUpdate(id, data, { new: true })
       .populate('creator')
       .populate('items');
+  }
+
+  static async deleteTask(id: string, creatorId: string) {
+    return this.TaskModel.findOneAndDelete({
+      _id: id,
+      creator: creatorId,
+    });
   }
 }

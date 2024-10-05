@@ -60,7 +60,8 @@ taskRouter.patch(
   }),
   async (req, res) => {
     try {
-      const { title, description, priority, tags, links, items } = req.body;
+      const { title, description, priority, tags, links, items, done } =
+        req.body;
       const taskId = req.params.taskId;
 
       const task = await TaskService.updateTask(taskId, {
@@ -70,6 +71,7 @@ taskRouter.patch(
         tags,
         links,
         items,
+        done,
       });
 
       res.json(task);
@@ -81,5 +83,41 @@ taskRouter.patch(
     }
   },
 );
+
+taskRouter.get('/:taskId', authGuard, async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const task = await TaskService.getTaskById(taskId);
+
+    if (!task) {
+      res.status(404).json({
+        message: 'Task not found',
+      });
+      return;
+    }
+
+    res.json(task);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      message: 'Error fetching task',
+    });
+  }
+});
+
+taskRouter.delete('/:taskId', authGuard, async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const userId = req.user.id;
+    await TaskService.deleteTask(taskId, userId);
+
+    res.json({ message: 'Task deleted' });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      message: 'Error deleting task',
+    });
+  }
+});
 
 export { taskRouter };

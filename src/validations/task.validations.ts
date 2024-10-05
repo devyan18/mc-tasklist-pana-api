@@ -13,6 +13,7 @@ export const updateTaskSchema = z.object({
   tags: z.array(z.string()).optional(),
   priority: z.enum(['low', 'medium', 'high']).optional(),
   items: z.array(z.string()).optional(),
+  done: z.boolean().optional(),
   links: z
     .array(
       z.object({

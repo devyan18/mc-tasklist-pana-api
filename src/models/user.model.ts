@@ -43,18 +43,40 @@ userSchema.pre('save', async function (next) {
 // add default avatar
 userSchema.pre('save', function (next) {
   if (!this.avatar) {
-    // Obtener las variables de entorno
-    const protocol = config.protocol || 'http';
-    const host = config.host || 'localhost';
-    const port = config.port ? `:${config.port}` : '';
-
     // Construir la URL completa de la imagen
     const imagePath = `/public/uploads/default-avatar.png`;
-    const imageUrl = `${protocol}://${host}${port}${imagePath}`;
 
-    this.avatar = imageUrl;
+    this.avatar = imagePath;
   }
   next();
+});
+
+userSchema.virtual('avatarUrl').get(function () {
+  const host = config.hostname;
+
+  let temporalAvatar = this.avatar;
+
+  if (this.avatar.startsWith('http')) {
+    // remove host from avatar
+    temporalAvatar = temporalAvatar.replace('http://localhost:4000', '');
+  }
+
+  if (this.avatar.startsWith('https')) {
+    temporalAvatar = temporalAvatar.replace(host, '');
+  }
+
+  return `${host}${temporalAvatar}`;
+});
+
+// add host to avatar pre finds
+userSchema.set('toJSON', {
+  virtuals: true, // Incluir los campos virtuales en la respuesta
+  transform: (doc, ret) => {
+    // Sobrescribir el campo avatar con la URL completa generada por el virtual
+    ret.avatar = ret.avatarUrl;
+    delete ret.avatarUrl; // Eliminar el campo virtual innecesario de la respuesta
+    return ret;
+  },
 });
 
 export type UserDocument = IUser & Document;

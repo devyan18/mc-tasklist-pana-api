@@ -1,23 +1,11 @@
-// src/middlewares/uploadImage.ts
-
 import { Request, Response, NextFunction } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import crypto from 'crypto'; // Importar el módulo crypto
-import { config } from '../settings/config';
+import sharp from 'sharp'; // Importar sharp para optimizar la imagen
 
-// Configuración de almacenamiento de Multer
-const storage = multer.diskStorage({
-  destination: (req: Request, file, cb) => {
-    cb(null, path.join(__dirname, '../../public/uploads')); // Ajusta la ruta según tu estructura
-  },
-  filename: (req: Request, file, cb) => {
-    // Generar un nombre de archivo único usando crypto.randomUUID
-    const uniqueSuffix = `${Date.now()}-${crypto.randomUUID()}`;
-    const ext = path.extname(file.originalname);
-    cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
-  },
-});
+// Configuración de almacenamiento temporal de Multer
+const storage = multer.memoryStorage(); // Guardar el archivo temporalmente en memoria
 
 // Filtro para aceptar solo imágenes
 const fileFilter = (
@@ -38,7 +26,7 @@ const fileFilter = (
   }
 };
 
-// Configurar Multer
+// Configurar Multer para usar almacenamiento en memoria
 const upload = multer({
   storage,
   fileFilter,
@@ -51,7 +39,7 @@ export const uploadImage = (propertyName: string) => {
     // Usar Multer para manejar la subida
     const uploadSingle = upload.single(propertyName); // 'image' es el campo de la solicitud que contiene la imagen
 
-    uploadSingle(req, res, (err: any) => {
+    uploadSingle(req, res, async (err: any) => {
       if (err instanceof multer.MulterError) {
         // Errores de Multer
         return res.status(400).json({ message: err.message });
@@ -62,24 +50,42 @@ export const uploadImage = (propertyName: string) => {
 
       // Si no hay archivo, continuar
       if (!req.file) {
-        return res
-          .status(400)
-          .json({ message: 'No se ha subido ninguna imagen' });
+        next();
+        return;
       }
 
-      // Obtener las variables de entorno
-      const protocol = config.protocol || 'http';
-      const host = config.host || 'localhost';
-      const port = config.port ? `:${config.port}` : '';
+      // Generar un nombre de archivo único usando crypto.randomUUID
+      const uniqueSuffix = `${Date.now()}-${crypto.randomUUID()}`;
+      const newFilename = `${propertyName}-${uniqueSuffix}.webp`; // Cambiar a formato webp
 
-      // Construir la URL completa de la imagen
-      const imagePath = `/public/uploads/${req.file.filename}`;
-      const imageUrl = `${protocol}://${host}${port}${imagePath}`;
+      // Ruta donde se guardará la imagen optimizada
+      const outputPath = path.join(
+        __dirname,
+        '../../public/uploads',
+        newFilename,
+      );
 
-      // Añadir la propiedad personalizada al body
-      req.body[propertyName] = imageUrl;
+      try {
+        // Usar sharp para optimizar la imagen
+        await sharp(req.file.buffer)
+          .resize(128, 128, {
+            fit: 'cover', // Ajustar la imagen para que sea 128x128, recortando si es necesario
+          })
+          .webp({ quality: 80 }) // Convertir a webp con calidad 80
+          .toFile(outputPath); // Guardar la imagen en disco
 
-      next();
+        // Construir la URL completa de la imagen
+        const imagePath = `/public/uploads/${newFilename}`;
+
+        // Añadir la propiedad personalizada al body
+        req.body[propertyName] = imagePath;
+
+        next();
+      } catch (imageError) {
+        console.log(imageError);
+        // Si hay un error al procesar la imagen, devolver un error
+        return res.status(500).json({ message: 'Error al procesar la imagen' });
+      }
     });
   };
 };

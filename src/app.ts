@@ -14,6 +14,7 @@ import path from 'path';
 import { itemRouter } from './routes/item.routes';
 import { quickTaskRouter } from './routes/quick-task.routes';
 import { cleanRouter } from './routes/clean.routes';
+import { config } from './settings/config';
 
 export const bootstrap = async () => {
   const app: Application = express();
@@ -38,7 +39,7 @@ export const bootstrap = async () => {
   );
   app.use(
     cors({
-      origin: ['http://localhost:5000', 'https://mc-pana.netlify.app'],
+      origin: [config.clientHostname, 'https://mc-pana.netlify.app'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
       credentials: true,
     }),

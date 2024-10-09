@@ -1,5 +1,6 @@
 import { model, Schema, Document } from 'mongoose';
 import { hashStr } from '../utils/crypt';
+import { config } from '../settings/config';
 
 type IUser = {
   username: string;
@@ -42,7 +43,7 @@ userSchema.pre('save', async function (next) {
 userSchema.pre('save', function (next) {
   if (!this.avatar) {
     // Construir la URL completa de la imagen
-    const imagePath = `/public/uploads/default-avatar.png`;
+    const imagePath = `${config.hostname}/public/uploads/default-avatar.png`;
 
     this.avatar = imagePath;
   }

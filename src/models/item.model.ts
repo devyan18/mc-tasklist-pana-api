@@ -5,6 +5,9 @@ type IItem = Document & {
   name: string;
   image: string;
   mod: string;
+  namespacedId: string;
+  stackSize: number;
+  renewable: boolean;
 };
 
 const itemSchema = new Schema<IItem>(
@@ -15,6 +18,18 @@ const itemSchema = new Schema<IItem>(
     },
     image: {
       type: String,
+      required: true,
+    },
+    namespacedId: {
+      type: String,
+      required: true,
+    },
+    stackSize: {
+      type: Number,
+      required: true,
+    },
+    renewable: {
+      type: Boolean,
       required: true,
     },
     mod: {

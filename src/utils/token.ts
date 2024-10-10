@@ -6,7 +6,7 @@ type Payload = {
 };
 
 export const createJwt = async (payload: Payload): Promise<string | null> => {
-  const expired = '60d';
+  const expired = '7d';
 
   try {
     return new Promise((res, rej) => {

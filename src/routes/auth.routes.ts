@@ -28,7 +28,7 @@ authRouter.post(
 
       res
         .cookie(config.accessCookieName, response.accessToken, {
-          maxAge: 3600000 * 24 * 7,
+          maxAge: 3600000 * 24 * 7, // 7 days
           httpOnly: true,
           sameSite: 'none',
           secure: config.nodeEnv === 'production',
@@ -55,7 +55,7 @@ authRouter.post(
       console.log(config.nodeEnv);
       res
         .cookie(config.accessCookieName, response.accessToken, {
-          maxAge: 3600000 * 24 * 7,
+          maxAge: 3600000 * 24 * 7, // 7 days
           httpOnly: true,
           sameSite: 'none',
           secure: config.nodeEnv === 'production',

@@ -52,7 +52,7 @@ export const bootstrap = async () => {
   // routes
   app.use('/auth', authRouter);
   app.use('/tasks', authGuard, taskRouter);
-  app.use('/item', itemRouter);
+  app.use('/items', itemRouter);
   app.use('/quick-tasks', quickTaskRouter);
   app.use('/clean', cleanRouter);
 

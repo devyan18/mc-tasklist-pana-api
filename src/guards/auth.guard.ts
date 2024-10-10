@@ -12,8 +12,6 @@ export const authGuard = async (
     const accessToken =
       req.cookies[config.accessCookieName] || req.headers.authorization;
 
-    console.log(accessToken);
-
     if (!accessToken) {
       res.status(401).json({
         message: 'Unauthorized',

@@ -13,8 +13,14 @@ export class ItemService {
     return this.ItemModel.create(data);
   }
 
-  static async getItems() {
-    return this.ItemModel.find().sort({ createdAt: -1 });
+  static async getItems({ page = 1, limit = 10 }) {
+    console.log({
+      page,
+      limit,
+    });
+    const items = await this.ItemModel.find().sort({ createdAt: -1 }).exec();
+
+    return items.slice(0, limit);
   }
 
   static async getItemById(itemId: string) {

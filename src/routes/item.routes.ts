@@ -7,9 +7,11 @@ import { createItemSchema } from '../validations/item.validation';
 
 const itemRouter = Router();
 
-itemRouter.get('/', authGuard, async (_req, res) => {
+itemRouter.get('/', async (req, res) => {
+  const { page, limit } = req.query;
+
   try {
-    const items = await ItemService.getItems();
+    const items = await ItemService.getItems({ page: +page!, limit: +limit! });
     res.json(items);
   } catch (error) {
     console.error(error);

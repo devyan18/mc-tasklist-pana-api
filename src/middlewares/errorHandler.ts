@@ -16,6 +16,8 @@ export const errorHandler = (
       message: error.message,
     }));
 
+    console.log(err);
+
     res.status(400).json({
       message: 'Validation Error',
       errors: formattedErrors,

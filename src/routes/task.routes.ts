@@ -31,7 +31,7 @@ taskRouter.post(
     try {
       const { title, description, priority, tags, links, items } = req.body;
       const creator = req.user.id;
-
+      console.log(tags);
       const task = await TaskService.createTask({
         title,
         description,

@@ -13,8 +13,9 @@ import { authGuard } from './guards/auth.guard';
 import path from 'path';
 import { itemRouter } from './routes/item.routes';
 import { quickTaskRouter } from './routes/quick-task.routes';
-import { cleanRouter } from './routes/clean.routes';
+// import { cleanRouter } from './routes/clean.routes';
 import { config } from './settings/config';
+import { tagRouter } from './routes/tags.routes';
 
 export const bootstrap = async () => {
   const app: Application = express();
@@ -54,7 +55,8 @@ export const bootstrap = async () => {
   app.use('/tasks', authGuard, taskRouter);
   app.use('/items', itemRouter);
   app.use('/quick-tasks', quickTaskRouter);
-  app.use('/clean', cleanRouter);
+  // app.use('/clean', cleanRouter);
+  app.use('/tags', tagRouter);
 
   app.use(errorHandler);
 

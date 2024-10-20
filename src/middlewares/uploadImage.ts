@@ -2,10 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import crypto from 'node:crypto';
 
 // Configurar Cloudinary con tus credenciales
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  // Las variables de entorno se definen en el archivo .env or en la configuración de tu servidor
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, //
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
@@ -17,7 +19,7 @@ const storage = new CloudinaryStorage({
     return {
       folder: 'uploads', // Especifica la carpeta en Cloudinary
       format: 'webp', // Formato en el que se guardarán las imágenes
-      public_id: `${file.fieldname}-${Date.now()}`, // Nombre de archivo único
+      public_id: `${file.fieldname}-${crypto.randomUUID().toString()}`, // Nombre de archivo único
       transformation: [{ width: 128, height: 128, crop: 'fill' }], // Redimensionar a 128x128 píxeles
     };
   },

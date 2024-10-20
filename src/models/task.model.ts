@@ -10,6 +10,7 @@ type Link = {
 type Task = Document & {
   title: string;
   description: string;
+  icon: string | null;
   done: boolean;
   tags: string[];
   creator: Types.ObjectId;
@@ -29,14 +30,21 @@ const taskSchema = new Schema<Task>(
       type: String,
       required: true,
     },
+    icon: {
+      type: String,
+      required: false,
+      default: null,
+    },
     done: {
       type: Boolean,
       default: false,
     },
-    tags: {
-      type: [String],
-      default: [],
-    },
+    tags: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Tag',
+      },
+    ],
     creator: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -74,5 +82,22 @@ const taskSchema = new Schema<Task>(
     timestamps: true,
   },
 );
+
+taskSchema.pre('save', function (next) {
+  // add enpty array for tags
+  if (!this.tags) {
+    this.tags = [];
+  }
+
+  if (!this.items) {
+    this.items = [];
+  }
+
+  if (!this.links) {
+    this.links = [];
+  }
+
+  next();
+});
 
 export const Task = model<Task>('Task', taskSchema);

@@ -45,7 +45,7 @@ const fileFilter = (
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Límite de 5 MB
+  limits: { fileSize: 20 * 1024 * 1024 }, // Límite de 5 MB
 });
 
 // Middleware para subir la imagen
@@ -54,7 +54,12 @@ export const uploadImage = (propertyName: string) => {
     const uploadSingle = upload.single(propertyName);
 
     uploadSingle(req, res, (err: any) => {
+      if (!req.file) {
+        next();
+      }
+
       if (err) {
+        console.log(err);
         return res.status(400).json({ message: err.message });
       }
 

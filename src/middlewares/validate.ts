@@ -31,13 +31,18 @@ export const validate =
           path: err.path.join('.'),
           message: err.message,
         }));
-
+        console.log(formattedErrors);
         res.status(400).json({
           message: 'Validation Error',
           errors: formattedErrors,
         });
         return;
       }
+
+      console.log({
+        message: 'Internal Server Error',
+        error,
+      });
 
       // Si el error no es de Zod, pásalo al siguiente manejador de errores
       next(error);
